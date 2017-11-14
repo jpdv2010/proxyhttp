@@ -1,0 +1,4 @@
+proxy:
+    solr:
+        servlet_url: /*
+        target_url: http://localhost:8082/
