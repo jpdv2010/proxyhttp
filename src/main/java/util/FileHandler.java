@@ -40,8 +40,11 @@ public class FileHandler {
             for(File f : allFiles){
                 if(f.getName().equals(fileName)){
                     file = f;
+                    System.out.println(file.canWrite());
                 }else{
                     file = new File(fileName);
+                    logList = new ArrayList<>();
+                    break;
                 }
             }
         }
