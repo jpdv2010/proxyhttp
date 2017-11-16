@@ -1,5 +1,6 @@
 package br.com.unitri.analisedesempenho.proxy;
 
+import br.com.unitri.analisedesempenho.Main;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -20,6 +21,7 @@ import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.message.HeaderGroup;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import util.FileHandler;
 
 import javax.servlet.ServletException;
@@ -27,9 +29,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.util.*;
@@ -112,11 +114,11 @@ public class ProxyServlet extends HttpServlet {
 
 	private FileHandler fileHandler;
 
-	private List<String> logList = new ArrayList<>();
+	public ProxyServlet() throws FileNotFoundException, UnsupportedEncodingException {
+		fileHandler = new FileHandler();
+	}
 
-	private long totalTime;
 
-	private int requestNumber = 0;
 	@Override
 	public String getServletInfo() {
 		return "A proxy servlet by David Smiley, dsmiley@apache.org";
@@ -244,16 +246,20 @@ public class ProxyServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
 			throws ServletException, IOException {
-		Logger LOGGER = Logger.getLogger(this.getClass());
+		// LOGGER = Logger.getLogger(this.getClass());
 		Long initialDate = new Date().getTime();
-
-		if(Objects.equals(0,logList.size())) {
+		//if(!fileHandler.isStarted){
+		//	fileHandler = new FileHandler();
+		//	fileHandler.isStarted = true;
+		//}
+		/*if(Objects.equals(0,logList.size())) {
 			logList.add("");
 			logList.add("");
 			logList.add("");
 			logList.add("");
 			logList.add("");
-		}
+			logList.add("");
+		}*/
 //		System.out.print( initialDate + " - ");
 
 		// initialize request attributes from caches if unset by a subclass by
@@ -339,22 +345,26 @@ public class ProxyServlet extends HttpServlet {
 			// Note: Don't need to close servlet outputStream:
 			// http://stackoverflow.com/questions/1159168/should-one-call-close-on-httpservletresponse-getoutputstream-getwriter
 		}
-		requestNumber++;
+		//requestNumber++;
 		Long finalDate = new Date().getTime();
 
-		totalTime += finalDate - initialDate;
+		//totalTime += finalDate - initialDate;
 
-		if(requestNumber>0){
+		//requestsPerSecond = (double)logList.size()-5;
+		fileHandler.getLogList().add(finalDate-initialDate);
+
+		/*if(requestNumber>0){
 			logList.set(0,"Taxa de serviço em milisegundos: " + String.valueOf(totalTime/requestNumber) + "ms");
-			logList.set(1,"Taxa de atendimento por segundo: " + String.valueOf(logList.size()-4) + "request/s");
-			logList.set(2,"                                                                                ");
-			logList.set(3,"--------------------------------------Requests---------------------------------");
-			logList.set(4,"                                                                                ");
+			logList.set(1,"Taxa de atendimento por segundo: " + String.valueOf(requestsPerSecond) + " request/s");
+			logList.set(2,"Tempo gasto para processar " + String.valueOf(logList.size()-5) + " requisiçoes: " + String.valueOf((double)(totalTime/1000)) + " segundos");
+			logList.set(3,"                                                                                ");
+			logList.set(4,"--------------------------------------Requests---------------------------------");
+			logList.set(5,"                                                                                ");
 		}
 		logList.add("Requisiçao " + requestNumber + " : " + "Tempo gasto: " + " = " + (finalDate-initialDate) + "ms");
 
 		fileHandler = new FileHandler();
-		fileHandler.writeOnFile(logList);
+		fileHandler.writeOnFile(logList);*/
 	}
 
 	protected HttpResponse doExecute(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
@@ -407,6 +417,7 @@ public class ProxyServlet extends HttpServlet {
 			log(e.getMessage(), e);
 		}
 	}
+
 
 	/**
 	 * These are the "hop-by-hop" headers that should not be copied.

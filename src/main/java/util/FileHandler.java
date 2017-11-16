@@ -2,11 +2,15 @@ package util;
 
 import org.apache.tomcat.jni.Directory;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,39 +22,56 @@ public class FileHandler {
     private PrintWriter writer;
     private File file;
     private String fileName;
+    private Timer timer;
+    private File directory = new File("/home/joao/Documents/Projects/proxyhttp/tmp/logs/");
+    //public static boolean isStarted=false;
+    private List<Long> logList = new ArrayList<>();
 
     public FileHandler() throws FileNotFoundException, UnsupportedEncodingException {
-        fileName = "file_" +new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())/*new Date() */+ ".txt";
-
+        fileName = "log_" +new SimpleDateFormat("dd-MM-yyyy").format(new Date())/*new Date() */+ ".txt";
         writer = new PrintWriter("/home/joao/Documents/Projects/proxyhttp/tmp/logs/" + fileName, "UTF-8");
+        configTimer();
+        this.timer.start();
     }
 
-    public void writeOnFile(List<String> logList) {
-        file = new File(fileName);
-        for(String s : logList){
-            writer.println(s);
-            System.out.println(s);
+    public void writeOnFile() {
+        File[] allFiles = directory.listFiles();
+        if(allFiles != null){
+            for(File f : allFiles){
+                if(f.getName().equals(fileName)){
+                    file = f;
+                }else{
+                    file = new File(fileName);
+                }
+            }
+        }
+        for(Long l : logList){
+            writer.println(String.valueOf(l));
+            System.out.println(String.valueOf(l));
         }
         writer.close();
   }
 
- /*   public bool exists(String fileN) {
+    private void configTimer(){
+        this.timer = new Timer(1000,generateLog);
+    }
 
-        String fileName = "app" + new Date().getTime() + ".log";
+    private ActionListener generateLog = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
 
-        if (folder.listFiles() != null)  {
-            for (final File fileEntry : folder.listFiles()) {
-                if (fileEntry.getName().equals(fileName)) {
-                    file = fileEntry;
-                    return ;
-                } else {
-                    file = new File(folder + fileName);
-                }
-            }
-        } else {
-            file = new File(folder + fileName);
+                writeOnFile();
+
         }
-        //todo write
-    }*/
+    };
+
+    public List<Long> getLogList() {
+        return logList;
+    }
+
+    public void setLogList(List<Long> logList) {
+        this.logList = logList;
+    }
+
 
 }

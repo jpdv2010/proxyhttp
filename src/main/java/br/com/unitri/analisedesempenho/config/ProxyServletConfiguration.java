@@ -9,11 +9,14 @@ import org.springframework.core.env.Environment;
 
 import br.com.unitri.analisedesempenho.proxy.ProxyServlet;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+
 @Configuration
 public class ProxyServletConfiguration implements EnvironmentAware {
 
   @Bean
-  public ServletRegistrationBean servletRegistrationBean(){
+  public ServletRegistrationBean servletRegistrationBean() throws FileNotFoundException, UnsupportedEncodingException {
     ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new ProxyServlet(), propertyResolver.getProperty("servlet_url"));
     servletRegistrationBean.addInitParameter(ProxyServlet.P_TARGET_URI, propertyResolver.getProperty("target_url"));
     servletRegistrationBean.addInitParameter(ProxyServlet.P_LOG, propertyResolver.getProperty("logging_enabled", "false"));
