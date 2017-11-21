@@ -22,59 +22,46 @@ public class FileHandler {
     private PrintWriter writer;
     private File file;
     private String fileName;
-    private Timer timer;
     private File directory = new File("/home/joao/Documents/Projects/proxyhttp/tmp/logs/");
-    //public static boolean isStarted=false;
-    private List<Long> logList = new ArrayList<>();
+    private List<Log> logList;
 
     public FileHandler() throws FileNotFoundException, UnsupportedEncodingException {
         fileName = "log_" +new SimpleDateFormat("dd-MM-yyyy").format(new Date())/*new Date() */+ ".txt";
-        writer = new PrintWriter("/home/joao/Documents/Projects/proxyhttp/tmp/logs/" + fileName, "UTF-8");
-        configTimer();
-        this.timer.start();
+        logList = new ArrayList<>();
     }
 
-    public void writeOnFile() {
-        File[] allFiles = directory.listFiles();
-        if(allFiles != null){
-            for(File f : allFiles){
-                if(f.getName().equals(fileName)){
-                    file = f;
-                    System.out.println(file.canWrite());
-                }else{
-                    file = new File(fileName);
-                    logList = new ArrayList<>();
-                    break;
-                }
+    public void writeOnFile() throws FileNotFoundException, UnsupportedEncodingException {
+        file = existsFile();
+        writer = new PrintWriter("/home/joao/Documents/Projects/proxyhttp/tmp/logs/" + fileName, "UTF-8");
+        for(Log l : logList){
+            if(l.getRequestTime() != null){
+                writer.println("Requisiçao em: " + String.valueOf(l.getLogDate()) + " - No Tempo: " + String.valueOf(l.getRequestTime()) + "ms");
+                System.out.println("Requisiçao em: " + String.valueOf(l.getLogDate()) + " - No Tempo: " + String.valueOf(l.getRequestTime()) + "ms");
             }
-        }
-        for(Long l : logList){
-            writer.println(String.valueOf(l));
-            System.out.println(String.valueOf(l));
         }
         writer.close();
   }
 
-    private void configTimer(){
-        this.timer = new Timer(1000,generateLog);
-    }
+  private File existsFile(){
+      File[] allFiles = directory.listFiles();
+      if(allFiles != null){
+          for(File f : allFiles){
+              if(f.getName().equals(fileName)) {
+                  return f;
+              }
+          }
+      }
+      logList = new ArrayList<>();
+      return new File(fileName);
+  }
 
-    private ActionListener generateLog = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
 
-                writeOnFile();
-
-        }
-    };
-
-    public List<Long> getLogList() {
+    public List<Log> getLogList() {
         return logList;
     }
 
-    public void setLogList(List<Long> logList) {
+    public void setLogList(List<Log> logList) {
         this.logList = logList;
     }
-
 
 }

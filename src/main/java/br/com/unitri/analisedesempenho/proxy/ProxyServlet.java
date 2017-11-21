@@ -23,6 +23,8 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import util.FileHandler;
+import util.Log;
+import util.TimerHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -34,6 +36,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.HttpCookie;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -112,10 +115,10 @@ public class ProxyServlet extends HttpServlet {
 
 	private HttpClient proxyClient;
 
-	private FileHandler fileHandler;
+	private TimerHandler timerHandler;
 
 	public ProxyServlet() throws FileNotFoundException, UnsupportedEncodingException {
-		fileHandler = new FileHandler();
+		timerHandler = new TimerHandler();
 	}
 
 
@@ -348,10 +351,13 @@ public class ProxyServlet extends HttpServlet {
 		//requestNumber++;
 		Long finalDate = new Date().getTime();
 
+		Log log = new Log();
+		log.setRequestTime(finalDate - initialDate);
+		log.setLogDate(String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date())));
 		//totalTime += finalDate - initialDate;
 
 		//requestsPerSecond = (double)logList.size()-5;
-		fileHandler.getLogList().add(finalDate-initialDate);
+		timerHandler.getLogList().add(log);
 
 		/*if(requestNumber>0){
 			logList.set(0,"Taxa de serviço em milisegundos: " + String.valueOf(totalTime/requestNumber) + "ms");
