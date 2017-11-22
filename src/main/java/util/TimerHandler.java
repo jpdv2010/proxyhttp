@@ -18,11 +18,11 @@ public class TimerHandler {
     public TimerHandler() throws FileNotFoundException, UnsupportedEncodingException {
         start();
         fileHandler = new FileHandler();
-        this.logList = fileHandler.getLogList();
+        this.logList = fileHandler.getDailyReport();
     }
 
     private void start(){
-        this.timer = new Timer(1000,manageFile);
+        this.timer = new Timer(5000,manageFile);
         this.timer.start();
     }
 
@@ -32,16 +32,14 @@ public class TimerHandler {
             Log l = new Log();
             l.setLogDate(String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date())));
             logList.add(0,l);
-            if(fileHandler.getLogList().get(0).getLogDate().equals(String.valueOf(new SimpleDateFormat("dd-MM-yyyy")))){
+            if(fileHandler.getDailyReport().get(0).getLogDate().equals(String.valueOf(new SimpleDateFormat("dd-MM-yyyy")))){
                 logList = new ArrayList<>();
             }else{
-                fileHandler.setLogList(logList);
+                fileHandler.setDailyReport(logList);
             }
             try {
                 fileHandler.writeOnFile();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
