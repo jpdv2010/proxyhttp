@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class TimerHandler {
     private Timer timer;
@@ -31,7 +32,7 @@ public class TimerHandler {
         public void actionPerformed(ActionEvent actionEvent) {
             Log l = new Log();
             l.setLogDate(String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date())));
-            logList.add(0,l);
+            if(Objects.equals(logList.size(),0)) logList.add(0,l);
             if(fileHandler.getDailyReport().get(0).getLogDate().equals(String.valueOf(new SimpleDateFormat("dd-MM-yyyy")))){
                 logList = new ArrayList<>();
             }else{
