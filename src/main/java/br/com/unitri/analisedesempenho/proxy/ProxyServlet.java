@@ -297,7 +297,6 @@ public class ProxyServlet extends HttpServlet {
 		try {
 			// Execute the request
 			proxyResponse = doExecute(servletRequest, servletResponse, proxyRequest);
-
 			// Process the response:
 
 			// Pass the response code. This method with the "reason phrase" is
@@ -350,12 +349,11 @@ public class ProxyServlet extends HttpServlet {
 		}
 		//requestNumber++;
 		Long finalDate = new Date().getTime();
-
 		Log log = new Log();
+		log.setMethod(servletRequest.getMethod());
 		log.setRequestTime(finalDate - initialDate);
 		log.setLogDate(String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date())));
 		//totalTime += finalDate - initialDate;
-
 		//requestsPerSecond = (double)logList.size()-5;
 		timerHandler.getLogList().add(log);
 

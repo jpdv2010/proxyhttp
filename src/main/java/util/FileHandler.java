@@ -30,7 +30,7 @@ public class FileHandler {
         writer = new PrintWriter("/home/joao/Documents/Projects/proxyhttp/tmp/logs/" + file.getName(), "UTF-8");
         for(Log l : dailyReport.getLogList()){
             if(l.getRequestTime() != null){
-                writer.println("Requisiçao em: " + String.valueOf(l.getLogDate()) + " - No Tempo: " + String.valueOf(l.getRequestTime()) + "ms");
+                writer.println("Requisiçao " + l.getMethod() + " em: " + String.valueOf(l.getLogDate()) + " - No Tempo: " + String.valueOf(l.getRequestTime()) + "ms");
                 System.out.println("Requisiçao em: " + String.valueOf(l.getLogDate()) + " - No Tempo: " + String.valueOf(l.getRequestTime()) + "ms");
             }
         }

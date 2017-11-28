@@ -8,6 +8,8 @@ public class Log {
 
     private Long requestTime;
 
+    private String method;
+
     public Long getRequestTime() {
         return requestTime;
     }
@@ -22,5 +24,13 @@ public class Log {
 
     public void setLogDate(String logDate) {
         this.logDate = logDate;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 }
