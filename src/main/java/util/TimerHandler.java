@@ -23,7 +23,7 @@ public class TimerHandler {
     }
 
     private void start(){
-        this.timer = new Timer(5000,manageFile);
+        this.timer = new Timer(5000,manageFile);//---------------Timer de 5 segundos pra nao dar excessao de modificaçao de Array
         this.timer.start();
     }
 
@@ -33,7 +33,7 @@ public class TimerHandler {
             Log l = new Log();
             l.setLogDate(String.valueOf(new SimpleDateFormat("dd-MM-yyyy").format(new Date())));
             if(Objects.equals(logList.size(),0)) logList.add(0,l);
-            if(fileHandler.getDailyReport().get(0).getLogDate().equals(String.valueOf(new SimpleDateFormat("dd-MM-yyyy")))){
+            if(!fileHandler.getDailyReport().get(0).getLogDate().equals(String.valueOf(new SimpleDateFormat("dd-MM-yyyy")))){
                 logList = new ArrayList<>();
             }else{
                 fileHandler.setDailyReport(logList);

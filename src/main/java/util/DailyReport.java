@@ -20,6 +20,10 @@ public class DailyReport {
 
     public DailyReport(){
         fileName = "daily_log:" +new SimpleDateFormat("dd-MM-yyyy").format(new Date())/*new Date() */+ ".txt";
+        Log log = new Log();
+        log.setLogDate(String.valueOf(new SimpleDateFormat("dd-MM-yyyy")));
+        logList.add(0,log);
+
     }
 
 
