@@ -1,10 +1,9 @@
 package util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Log {
-    private String logDate;
+    private String outputDate;
+
+    private String inputDate;
 
     private Long requestTime;
 
@@ -18,12 +17,12 @@ public class Log {
         this.requestTime = requestTime;
     }
 
-    public String getLogDate() {
-        return logDate;
+    public String getOutputDate() {
+        return outputDate;
     }
 
-    public void setLogDate(String logDate) {
-        this.logDate = logDate;
+    public void setOutputDate(String outputDate) {
+        this.outputDate = outputDate;
     }
 
     public String getMethod() {
@@ -32,5 +31,13 @@ public class Log {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public String getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(String inputDate) {
+        this.inputDate = inputDate;
     }
 }

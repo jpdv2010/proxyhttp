@@ -1,0 +1,10 @@
+Requisiçao GET em: 28-11-2017 - No Tempo: 90 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 87 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 117 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 133 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 133 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 139 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 178 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 184 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 31 ms
+Requisiçao GET em: 28-11-2017 - No Tempo: 12 ms
