@@ -39,10 +39,10 @@ public class DailyReport {
         return 0.0;
     }
 
-    private double dailyServiceTax(File file){
+    private double[] dailyServiceTax(){
         List<Log> logList = new ArrayList<>();
         try {
-           logList = getLogsFromArchive(file.getName());
+           logList = getLogsFromArchive(this.file.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,18 +53,32 @@ public class DailyReport {
         Integer[] contInputsPerMin = new Integer[1440];
         Integer[] contOutputPerMin = new Integer[1440];
         for(Log log : logList){
-            String[] logDay = log.getInputDate().split(" ");
-            String[] logHour = logDay[2].split(":");
-            contInputsPerMin = requestsPerMinute(log.getInputDate(),logList,logHour);
-            contOutputPerMin = requestsPerMinute(log.getOutputDate(),logList,logHour);
+            String[] logDayInput = log.getInputDate().split(" ");
+            String[] logHourInput = logDayInput[2].split(":");
+            String[] logDayOutput = log.getInputDate().split(" ");
+            String[] logHourOutput = logDayInput[2].split(":");
+            contInputsPerMin = requestsPerMinute(log.getInputDate(),logList,logHourInput);
+            contOutputPerMin = requestsPerMinute(log.getOutputDate(),logList,logHourOutput);
         }
-        int withRequestMinute = 0;
+        int withRequestMinuteInput = 0;
         for(Integer minute:contInputsPerMin){
             if(minute != 0){
-                withRequestMinute++;
+                withRequestMinuteInput++;
             }
         }
-        return logList.size()/withRequestMinute;
+
+        int withRequestMinuteOutput = 0;
+        for(Integer minute:contOutputPerMin){
+            if(minute != 0){
+                withRequestMinuteOutput++;
+            }
+        }
+
+        double[] results = new double[2];
+        results[0] = logList.size()/withRequestMinuteInput;
+        results[1] = logList.size()/withRequestMinuteOutput;
+
+        return results;
     }
 
     private Integer[] requestsPerMinute(String logDate, List<Log> logList, String[] logHour){
@@ -89,6 +103,17 @@ public class DailyReport {
         writer.println("Tempo medio de execuçao em: "
                 + new SimpleDateFormat("dd-MM-yyyy").format(new Date())
                 + " foi de: " + dalilyMediumAccessTime());
+        double[] inputOutputTaxes = dailyServiceTax();
+            writer.println("Taxa de chegada = " + inputOutputTaxes[0]);
+            writer.println("Taxa de saida = " + inputOutputTaxes[1]);
+
+        writer.println("Probabilidades do numero de cliente ser maior que 250" + probabilityClientNumberMajorN(250));
+        writer.println("Probabilidades do numero de cliente ser maior que 400" + probabilityClientNumberMajorN(400));
+        writer.println("Probabilidades do numero de cliente ser maior que 550" + probabilityClientNumberMajorN(550));
+        writer.println("Probabilidades de haver clientes no sistema" + probabilityClientOnSystemN());
+        writer.println("Numero medio de clientes na fila" + mediumNumberClientsOnQuery());
+        writer.println("Tempo medio de espera na fila por cliente" + mediumQueryTime());
+        writer.println("Tempo medio por cliente" + perClientMediumTime());
 
         writer.close();
     }
@@ -124,6 +149,54 @@ public class DailyReport {
         }
         if(i == 0){return null;}
         return logs;
+    }
+
+    private double probabilityClientOnSystemN(){
+        file = existsFile();
+        double serviceTax = dalilyMediumAccessTime();
+        double[] inputOutputRage = dailyServiceTax();
+        double probability = (serviceTax - 2 / serviceTax);
+        return probability;
+    }
+
+    private double probabilityClientNumberMajorN(int value){
+        file = existsFile();
+        double serviceTax = dalilyMediumAccessTime();
+        double[] inputOutputRage = dailyServiceTax();
+        double probability = Math.pow(inputOutputRage[0],value) * (serviceTax - inputOutputRage[0]/inputOutputRage[0]);
+        return probability;
+    }
+
+    private double probabilitySystemHaveBusy(){
+        file = existsFile();
+        double serviceTax = dalilyMediumAccessTime();
+        double[] inputOutputRage = dailyServiceTax();
+        double probability = inputOutputRage[0]/serviceTax;
+        return probability;
+    }
+
+    private double mediumNumberClientsOnQuery(){
+        file = existsFile();
+        double serviceTax = dalilyMediumAccessTime();
+        double[] inputOutputRage = dailyServiceTax();
+        double probability = Math.pow(inputOutputRage[0],2)/serviceTax*(serviceTax-2);
+        return probability;
+    }
+
+    private double mediumQueryTime(){
+        file = existsFile();
+        double serviceTax = dalilyMediumAccessTime();
+        double[] inputOutputRage = dailyServiceTax();
+        double probability = inputOutputRage[0]/serviceTax*(serviceTax-2);
+        return probability;
+    }
+
+    private double perClientMediumTime(){
+        file = existsFile();
+        double serviceTax = dalilyMediumAccessTime();
+        double[] inputOutputRage = dailyServiceTax();
+        double probability = inputOutputRage[0]/serviceTax-2;
+        return probability;
     }
 
 
